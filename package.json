@@ -1,5 +1,5 @@
 {
-  "name": "voiceblok-content-generator",
+  "name": "promptblok-content-generator",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
     "deploy": "npm run build && npx @storyblok/field-plugin-cli@latest deploy"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@storyblok/field-plugin": "1.7.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -25,11 +26,14 @@
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.1.0",
     "@vitest/ui": "2.1.9",
+    "autoprefixer": "^10.4.21",
     "eslint": "^8.57.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "jsdom": "22.1.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13",
     "typescript": "5.8.2",
     "typescript-eslint": "^8.29.0",
     "vite": "5.4.16",
