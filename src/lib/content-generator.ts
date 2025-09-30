@@ -38,6 +38,8 @@ export const generateContent = async (
     }
 }
 
+// Chat mode removed
+
 const getSystemPrompt = (contentType: string): string => {
     const prompts = {
         headline: "You are a professional copywriter. Generate a compelling, benefit-focused headline that captures attention and communicates value. Keep it under 60 characters, avoid jargon, and make it actionable.",
@@ -51,3 +53,5 @@ const getSystemPrompt = (contentType: string): string => {
     }
     return prompts[contentType as keyof typeof prompts] || prompts.text
 }
+
+// Chat system instruction removed

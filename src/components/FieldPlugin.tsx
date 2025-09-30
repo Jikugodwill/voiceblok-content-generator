@@ -57,7 +57,13 @@ const FieldPlugin: FunctionComponent = () => {
           }
         }
       }
-      return { content: content as PromptBlokContent }
+      const c = content as PromptBlokContent
+      return { content: {
+        generatedText: c.generatedText || '',
+        originalPrompt: c.originalPrompt || '',
+        contentType: c.contentType || 'text',
+        timestamp: c.timestamp || Date.now(),
+      } }
     }
   })
 
@@ -79,6 +85,8 @@ const FieldPlugin: FunctionComponent = () => {
     originalPrompt: '',
     contentType: 'text',
     timestamp: Date.now(),
+    mode: 'single',
+    chatHistory: [],
   }
 
   console.log('📋 Current prompt content:', promptContent)
@@ -87,7 +95,7 @@ const FieldPlugin: FunctionComponent = () => {
 
   const handleGenerate = async (prompt: string) => {
     console.log('🚀 Generating content with prompt:', prompt)
-    console.log('📝 Selected content type:', selectedType)
+  console.log('📝 Selected content type:', selectedType)
     
     setIsProcessing(true)
     setError(null)
@@ -102,20 +110,11 @@ const FieldPlugin: FunctionComponent = () => {
         ? `${prompt}\n\nContext about what I'm building:\n${storyContext}`
         : prompt
       
-      console.log('🤖 Calling Gemini AI service...')
-      console.log('📝 Enhanced prompt:', enhancedPrompt)
-      
-      // Call real AI service
+      console.log('🤖 Calling Gemini single-turn...')
       const result = await generateContent(selectedType, enhancedPrompt)
-      
-      if (result.error) {
-        throw new Error(result.error)
-      }
-      
+      if (result.error) throw new Error(result.error)
       const generated = result.content
-      console.log('✨ Generated content:', generated)
-      
-      const contentData = {
+      const contentData: PromptBlokContent = {
         generatedText: generated,
         originalPrompt: prompt,
         contentType: selectedType,
@@ -175,6 +174,7 @@ const FieldPlugin: FunctionComponent = () => {
 
   return (
     <div className="voiceblok-field-plugin voiceblok-container">
+      <div className="vb-title">AI Assistant</div>
       {error && (
         <div className="error-message mb-4">
           {error}
@@ -198,6 +198,8 @@ const FieldPlugin: FunctionComponent = () => {
         disabled={isProcessing}
         placeholder="Enter your prompt..."
         value={selectedPrompt}
+        contentType={selectedType}
+        onChangeContentType={handleTypeChange}
       />
 
       <ContentPreview
@@ -210,8 +212,14 @@ const FieldPlugin: FunctionComponent = () => {
       />
 
       {isProcessing && (
-        <div className="vb-section vb-center processing-spinner">
-          ✨ Generating...
+        <div className="vb-section">
+          <div className="vb-card">
+            <div className="vb-skeleton">
+              <div className="line vb-w-80"></div>
+              <div className="line vb-w-90"></div>
+              <div className="line vb-w-70"></div>
+            </div>
+          </div>
         </div>
       )}
 

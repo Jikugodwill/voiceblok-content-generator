@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from 'react'
+import { CONTENT_TYPES } from '../lib/constants'
 
 interface PromptInputProps {
     onGenerate: (prompt: string) => void
     disabled: boolean
     placeholder?: string
     value?: string
+    contentType?: string
+    onChangeContentType?: (type: string) => void
 }
 
 const PromptInput: React.FC<PromptInputProps> = ({
     onGenerate,
     disabled,
     placeholder = "Enter your prompt...",
-    value = ''
+    value = '',
+    contentType = 'text',
+    onChangeContentType,
 }) => {
     const [prompt, setPrompt] = useState(value)
 
@@ -39,10 +44,11 @@ const PromptInput: React.FC<PromptInputProps> = ({
 
     return (
         <div className="vb-section">
-            <label className="vb-label">
-                AI Prompt
-            </label>
-            <div className="relative">
+            <div className="vb-header">
+                <div className="vb-title">Prompt</div>
+                <div className="vb-subtitle">Craft a clear, outcome-focused request</div>
+            </div>
+            <div className="vb-input-wrap">
                 <textarea
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
@@ -53,7 +59,21 @@ const PromptInput: React.FC<PromptInputProps> = ({
                     className="vb-textarea"
                 />
                 <div className="vb-helper">
-                    Cmd+Enter to generate
+                    <span className="vb-kbd">⌘ Enter</span> to generate
+                </div>
+                {/* Bottom-left content type dropdown */}
+                <div className="vb-type-dropdown">
+                    <select
+                        aria-label="Content type"
+                        className="vb-select"
+                        value={contentType}
+                        disabled={disabled}
+                        onChange={(e) => onChangeContentType?.(e.target.value)}
+                    >
+                        {CONTENT_TYPES.map((t) => (
+                            <option key={t.id} value={t.id}>{t.icon} {t.label}</option>
+                        ))}
+                    </select>
                 </div>
             </div>
             <button

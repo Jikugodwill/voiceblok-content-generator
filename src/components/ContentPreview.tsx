@@ -17,6 +17,7 @@ export default function ContentPreview({
 }: ContentPreviewProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(content);
+    const [copied, setCopied] = useState(false);
 
 
     const handleSave = () => {
@@ -31,8 +32,13 @@ export default function ContentPreview({
 
     if (!content) {
         return (
-            <div className="vb-empty-state">
-                Generated content will appear here...
+            <div className="vb-card">
+                <div className="vb-skeleton">
+                    <div className="line vb-w-70"></div>
+                    <div className="line vb-w-95"></div>
+                    <div className="line vb-w-88"></div>
+                    <div className="line vb-w-92"></div>
+                </div>
             </div>
         );
     }
@@ -42,10 +48,23 @@ export default function ContentPreview({
             {/* Content Type Badge */}
             {contentType && (
                 <div className="vb-row-between">
-                    <span className="vb-badge">
-                        {contentType}
-                    </span>
+                    <div className="vb-actions vb-actions-tight">
+                        <span className="vb-badge">{contentType}</span>
+                    </div>
                     <div className="vb-actions">
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault()
+                                navigator.clipboard.writeText(content)
+                                setCopied(true)
+                                setTimeout(() => setCopied(false), 1200)
+                            }}
+                            className="vb-button vb-button-secondary vb-button-sm"
+                            title={copied ? 'Copied!' : 'Copy to clipboard'}
+                        >
+                            {copied ? '✅ Copied' : '📋 Copy'}
+                        </button>
                         {onRegenerate && (
                             <button
                                 type="button"
